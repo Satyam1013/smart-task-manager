@@ -1,16 +1,12 @@
 export type Task = {
-  id: number;
+  id: string;
   title: string;
   description: string;
   priority: "low" | "medium" | "high";
   status: "to-do" | "in-progress" | "done";
   user: number;
-  dependencies: number[];
+  dependencies: string[];
   createdAt: string;
   updatedAt: string;
 };
 
-export type User = {
-  id: number;
-  email: string;
-};

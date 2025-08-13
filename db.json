@@ -1,16 +1,78 @@
 {
-  "users": [],
+  "users": [
+    {
+      "id": 1755089809259,
+      "name": "satyam",
+      "email": "satyam@gmail.com",
+      "password": "123"
+    }
+  ],
   "tasks": [
     {
-      "id": 1755080397643,
-      "title": "dry run",
-      "description": "practicing dca",
-      "priority": "low",
-      "status": "to-do",
-      "user": 1,
+      "id": 1755094275914,
+      "title": "study",
+      "description": "morning time",
+      "priority": "medium",
+      "status": "done",
+      "user": 1755089809259,
       "dependencies": [],
-      "createdAt": "2025-08-13T10:19:57.643Z",
-      "updatedAt": "2025-08-13T10:19:57.643Z"
+      "createdAt": "2025-08-13T14:11:15.914Z",
+      "updatedAt": "2025-08-13T14:51:08.028Z"
+    },
+    {
+      "id": 1755094875104,
+      "title": "ha",
+      "description": "hh",
+      "priority": "medium",
+      "status": "to-do",
+      "user": 1755089809259,
+      "dependencies": [],
+      "createdAt": "2025-08-13T14:21:15.104Z",
+      "updatedAt": "2025-08-13T14:21:15.104Z"
+    },
+    {
+      "id": 1755095469385,
+      "title": "hh",
+      "description": "jij",
+      "priority": "medium",
+      "status": "in-progress",
+      "user": 1755089809259,
+      "dependencies": [],
+      "createdAt": "2025-08-13T14:31:09.385Z",
+      "updatedAt": "2025-08-13T14:31:09.385Z"
+    },
+    {
+      "id": 1755095501885,
+      "title": "s",
+      "description": "kjk",
+      "priority": "low",
+      "status": "done",
+      "user": 1755089809259,
+      "dependencies": [],
+      "createdAt": "2025-08-13T14:31:41.885Z",
+      "updatedAt": "2025-08-13T14:31:41.885Z"
+    },
+    {
+      "id": 1755095519131,
+      "title": "hhsh",
+      "description": "hhh",
+      "priority": "medium",
+      "status": "done",
+      "user": 1755089809259,
+      "dependencies": [],
+      "createdAt": "2025-08-13T14:31:59.131Z",
+      "updatedAt": "2025-08-13T14:31:59.131Z"
+    },
+    {
+      "id": 1755096116836,
+      "title": "s",
+      "description": "s",
+      "priority": "medium",
+      "status": "to-do",
+      "user": 1755089809259,
+      "dependencies": [],
+      "createdAt": "2025-08-13T14:41:56.836Z",
+      "updatedAt": "2025-08-13T14:41:56.836Z"
     }
   ]
 }

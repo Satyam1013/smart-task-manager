@@ -1,7 +1,6 @@
 import { Low } from "lowdb";
 import { JSONFile } from "lowdb/node";
 
-// Define the shape of your database
 export type Task = {
   id: number;
   title: string;
@@ -14,17 +13,18 @@ export type Task = {
   updatedAt: string;
 };
 
-type User = {
+export type User = {
   id: number;
   name: string;
+  email: string;
+  password: string;
 };
 
-type Data = {
+export type Data = {
   users: User[];
   tasks: Task[];
 };
 
-// Create adapter and database instance
 const adapter = new JSONFile<Data>("db.json");
 const db = new Low<Data>(adapter, { users: [], tasks: [] });
 
