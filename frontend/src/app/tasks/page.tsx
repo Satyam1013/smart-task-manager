@@ -13,6 +13,7 @@ export default function TasksPage() {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<"low" | "medium" | "high">("medium");
   const [status, setStatus] = useState<"to-do" | "in-progress" | "done">("to-do");
+  const [dependencies, setDependencies] = useState<number[]>([]);
 
   // Filters
   const [priorityFilter, setPriorityFilter] = useState<"all" | "low" | "medium" | "high">("all");
@@ -24,6 +25,7 @@ export default function TasksPage() {
   const [editDescription, setEditDescription] = useState("");
   const [editPriority, setEditPriority] = useState<"low" | "medium" | "high">("medium");
   const [editStatus, setEditStatus] = useState<"to-do" | "in-progress" | "done">("to-do");
+  const [editDependencies, setEditDependencies] = useState<string[]>([]);
 
   useEffect(() => {
     const user = getAuthUser();
@@ -45,12 +47,13 @@ export default function TasksPage() {
       priority,
       status,
       user: user.id,
-      dependencies: [],
+      dependencies,
     });
     setTasks((prev) => [...prev, res.data]);
     setTitle("");
     setDescription("");
     setStatus("to-do");
+    setDependencies([]);
   };
 
   const startEditing = (task: Task) => {
@@ -59,17 +62,23 @@ export default function TasksPage() {
     setEditDescription(task.description);
     setEditPriority(task.priority);
     setEditStatus(task.status);
+    setEditDependencies(task.dependencies || []);
   };
 
   const updateTask = async (id: string) => {
-    const res = await api.put(`/tasks/${id}`, {
-      title: editTitle,
-      description: editDescription,
-      priority: editPriority,
-      status: editStatus,
-    });
-    setTasks((prev) => prev.map((t) => (t.id === id ? res.data : t)));
-    setEditingTaskId(null);
+    try {
+      const res = await api.put(`/tasks/${id}`, {
+        title: editTitle,
+        description: editDescription,
+        priority: editPriority,
+        status: editStatus,
+        dependencies: editDependencies,
+      });
+      setTasks((prev) => prev.map((t) => (t.id === id ? res.data : t)));
+      setEditingTaskId(null);
+    } catch (err: any) {
+      alert(err.response?.data?.error || "Error updating task");
+    }
   };
 
   const deleteTask = async (id: string) => {
@@ -89,6 +98,10 @@ export default function TasksPage() {
     return matchesPriority && matchesStatus;
   });
 
+  // Available tasks to choose as dependencies (exclude the task itself)
+  const availableDependencies = (currentTaskId?: string) =>
+    tasks.filter((t) => t.id !== currentTaskId);
+
   return (
     <div className="min-h-screen bg-gray-900 text-white py-10">
       <div className="max-w-5xl mx-auto">
@@ -103,37 +116,57 @@ export default function TasksPage() {
         {/* Create Task */}
         <div className="bg-gray-800 p-6 rounded-lg shadow mb-8">
           <h2 className="text-xl font-semibold mb-4">Create Task</h2>
-          <div className="flex flex-col md:flex-row gap-4">
-            <input
-              className="flex-1 p-2 rounded bg-gray-700 border border-gray-600"
-              placeholder="Title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-            <input
-              className="flex-1 p-2 rounded bg-gray-700 border border-gray-600"
-              placeholder="Description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-            <select
-              className="p-2 rounded bg-gray-700 border border-gray-600"
-              value={priority}
-              onChange={(e) => setPriority(e.target.value as any)}
-            >
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-            </select>
-            <select
-              className="p-2 rounded bg-gray-700 border border-gray-600"
-              value={status}
-              onChange={(e) => setStatus(e.target.value as any)}
-            >
-              <option value="to-do">To Do</option>
-              <option value="in-progress">In Progress</option>
-              <option value="done">Done</option>
-            </select>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
+              <input
+                className="flex-1 p-2 rounded bg-gray-700 border border-gray-600"
+                placeholder="Title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <input
+                className="flex-1 p-2 rounded bg-gray-700 border border-gray-600"
+                placeholder="Description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+            <div className="flex gap-4">
+              <select
+                className="p-2 rounded bg-gray-700 border border-gray-600"
+                value={priority}
+                onChange={(e) => setPriority(e.target.value as any)}
+              >
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+              <select
+                className="p-2 rounded bg-gray-700 border border-gray-600"
+                value={status}
+                onChange={(e) => setStatus(e.target.value as any)}
+              >
+                <option value="to-do">To Do</option>
+                <option value="in-progress">In Progress</option>
+                <option value="done">Done</option>
+              </select>
+              {/* Dependencies multi-select */}
+              <select
+                multiple
+                className="p-2 rounded bg-gray-700 border border-gray-600 flex-1"
+                value={dependencies.map(String)}
+                onChange={(e) => {
+                  const values = Array.from(e.target.selectedOptions, (opt) => Number(opt.value));
+                  setDependencies(values);
+                }}
+              >
+                {availableDependencies().map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.title} ({t.status})
+                  </option>
+                ))}
+              </select>
+            </div>
             <button
               onClick={addTask}
               className="bg-teal-500 hover:bg-teal-600 px-4 py-2 rounded font-semibold"
@@ -169,7 +202,7 @@ export default function TasksPage() {
 
         {/* Task List */}
         <div className="bg-gray-800 p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">All Tasks</h2>
+          <h2 className="text-xl font-semibold mb-4">My Tasks</h2>
           {filteredTasks.length === 0 ? (
             <p className="text-gray-400">No tasks match the filters.</p>
           ) : (
@@ -180,6 +213,7 @@ export default function TasksPage() {
                   <th className="p-2 text-left">Description</th>
                   <th className="p-2 text-left">Priority</th>
                   <th className="p-2 text-left">Status</th>
+                  <th className="p-2 text-left">Dependencies</th>
                   <th className="p-2 text-left">Actions</th>
                 </tr>
               </thead>
@@ -224,6 +258,26 @@ export default function TasksPage() {
                             <option value="done">Done</option>
                           </select>
                         </td>
+                        <td className="p-2">
+                          <select
+                            multiple
+                            value={editDependencies.map(String)}
+                            onChange={(e) => {
+                              const values = Array.from(
+                                e.target.selectedOptions,
+                                (opt) => String(opt.value)
+                              );
+                              setEditDependencies(values);
+                            }}
+                            className="bg-gray-700 p-1 rounded border border-gray-600 w-full"
+                          >
+                            {availableDependencies(task.id).map((t) => (
+                              <option key={t.id} value={t.id}>
+                                {t.title} ({t.status})
+                              </option>
+                            ))}
+                          </select>
+                        </td>
                         <td className="p-2 space-x-2">
                           <button
                             onClick={() => updateTask(task.id)}
@@ -245,6 +299,13 @@ export default function TasksPage() {
                         <td className="p-2">{task.description}</td>
                         <td className="p-2 capitalize">{task.priority}</td>
                         <td className="p-2 capitalize">{task.status}</td>
+                        <td className="p-2">
+                          {task.dependencies?.length
+                            ? task.dependencies
+                                .map((depId) => tasks.find((t) => t.id === depId)?.title)
+                                .join(", ")
+                            : "None"}
+                        </td>
                         <td className="p-2 space-x-2">
                           <button
                             onClick={() => startEditing(task)}

@@ -9,70 +9,52 @@
   ],
   "tasks": [
     {
-      "id": 1755094275914,
-      "title": "study",
-      "description": "morning time",
-      "priority": "medium",
-      "status": "done",
-      "user": 1755089809259,
-      "dependencies": [],
-      "createdAt": "2025-08-13T14:11:15.914Z",
-      "updatedAt": "2025-08-13T14:51:08.028Z"
-    },
-    {
-      "id": 1755094875104,
-      "title": "ha",
-      "description": "hh",
+      "id": 1755098606391,
+      "title": "gym",
+      "description": "afternoon routine",
       "priority": "medium",
       "status": "to-do",
       "user": 1755089809259,
-      "dependencies": [],
-      "createdAt": "2025-08-13T14:21:15.104Z",
-      "updatedAt": "2025-08-13T14:21:15.104Z"
+      "dependencies": [
+        "1755098626324"
+      ],
+      "createdAt": "2025-08-13T15:23:26.391Z",
+      "updatedAt": "2025-08-13T15:25:14.022Z"
     },
     {
-      "id": 1755095469385,
-      "title": "hh",
-      "description": "jij",
+      "id": 1755098626324,
+      "title": "lunch",
+      "description": "random",
+      "priority": "low",
+      "status": "to-do",
+      "user": 1755089809259,
+      "dependencies": [],
+      "createdAt": "2025-08-13T15:23:46.324Z",
+      "updatedAt": "2025-08-13T15:23:46.324Z"
+    },
+    {
+      "id": 1755098649263,
+      "title": "ongoing",
+      "description": "demo",
       "priority": "medium",
       "status": "in-progress",
       "user": 1755089809259,
       "dependencies": [],
-      "createdAt": "2025-08-13T14:31:09.385Z",
-      "updatedAt": "2025-08-13T14:31:09.385Z"
+      "createdAt": "2025-08-13T15:24:09.263Z",
+      "updatedAt": "2025-08-13T15:24:09.263Z"
     },
     {
-      "id": 1755095501885,
-      "title": "s",
-      "description": "kjk",
-      "priority": "low",
-      "status": "done",
+      "id": 1755098734765,
+      "title": "breakfast",
+      "description": "hi",
+      "priority": "high",
+      "status": "in-progress",
       "user": 1755089809259,
-      "dependencies": [],
-      "createdAt": "2025-08-13T14:31:41.885Z",
-      "updatedAt": "2025-08-13T14:31:41.885Z"
-    },
-    {
-      "id": 1755095519131,
-      "title": "hhsh",
-      "description": "hhh",
-      "priority": "medium",
-      "status": "done",
-      "user": 1755089809259,
-      "dependencies": [],
-      "createdAt": "2025-08-13T14:31:59.131Z",
-      "updatedAt": "2025-08-13T14:31:59.131Z"
-    },
-    {
-      "id": 1755096116836,
-      "title": "s",
-      "description": "s",
-      "priority": "medium",
-      "status": "to-do",
-      "user": 1755089809259,
-      "dependencies": [],
-      "createdAt": "2025-08-13T14:41:56.836Z",
-      "updatedAt": "2025-08-13T14:41:56.836Z"
+      "dependencies": [
+        1755098606391
+      ],
+      "createdAt": "2025-08-13T15:25:34.765Z",
+      "updatedAt": "2025-08-13T15:26:03.095Z"
     }
   ]
 }
