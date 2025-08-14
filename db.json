@@ -5,6 +5,12 @@
       "name": "satyam",
       "email": "satyam@gmail.com",
       "password": "123"
+    },
+    {
+      "id": 1755183410217,
+      "name": "yash",
+      "email": "yash@gmail.com",
+      "password": "123"
     }
   ],
   "tasks": [

@@ -5,26 +5,38 @@ import { useRouter } from "next/navigation";
 import api from "../lib/api";
 import { getAuthUser, clearAuthUser } from "../lib/auth";
 import { Task } from "../types/task";
+import { User } from "../types/user";
 
 export default function TasksPage() {
   const router = useRouter();
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<"low" | "medium" | "high">("medium");
-  const [status, setStatus] = useState<"to-do" | "in-progress" | "done">("to-do");
+  const [status, setStatus] = useState<"to-do" | "in-progress" | "done">(
+    "to-do"
+  );
   const [dependencies, setDependencies] = useState<number[]>([]);
-
+  console.log("users", users);
   // Filters
-  const [priorityFilter, setPriorityFilter] = useState<"all" | "low" | "medium" | "high">("all");
-  const [statusFilter, setStatusFilter] = useState<"all" | "to-do" | "in-progress" | "done">("all");
+  const [priorityFilter, setPriorityFilter] = useState<
+    "all" | "low" | "medium" | "high"
+  >("all");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "to-do" | "in-progress" | "done"
+  >("all");
 
   // Edit states
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
-  const [editPriority, setEditPriority] = useState<"low" | "medium" | "high">("medium");
-  const [editStatus, setEditStatus] = useState<"to-do" | "in-progress" | "done">("to-do");
+  const [editPriority, setEditPriority] = useState<"low" | "medium" | "high">(
+    "medium"
+  );
+  const [editStatus, setEditStatus] = useState<
+    "to-do" | "in-progress" | "done"
+  >("to-do");
   const [editDependencies, setEditDependencies] = useState<string[]>([]);
 
   useEffect(() => {
@@ -34,6 +46,7 @@ export default function TasksPage() {
       return;
     }
     api.get("/tasks").then((res) => setTasks(res.data));
+    api.get("/users").then((res) => setUsers(res.data));
   }, [router]);
 
   const addTask = async () => {
@@ -93,8 +106,10 @@ export default function TasksPage() {
 
   // Filter logic
   const filteredTasks = tasks.filter((task) => {
-    const matchesPriority = priorityFilter === "all" || task.priority === priorityFilter;
-    const matchesStatus = statusFilter === "all" || task.status === statusFilter;
+    const matchesPriority =
+      priorityFilter === "all" || task.priority === priorityFilter;
+    const matchesStatus =
+      statusFilter === "all" || task.status === statusFilter;
     return matchesPriority && matchesStatus;
   });
 
@@ -108,7 +123,10 @@ export default function TasksPage() {
         {/* Header */}
         <div className="flex justify-between mb-6">
           <h1 className="text-3xl font-bold">Smart Task Manager</h1>
-          <button onClick={logout} className="bg-red-500 px-4 py-2 rounded hover:bg-red-600">
+          <button
+            onClick={logout}
+            className="bg-red-500 px-4 py-2 rounded hover:bg-red-600"
+          >
             Logout
           </button>
         </div>
@@ -156,7 +174,9 @@ export default function TasksPage() {
                 className="p-2 rounded bg-gray-700 border border-gray-600 flex-1"
                 value={dependencies.map(String)}
                 onChange={(e) => {
-                  const values = Array.from(e.target.selectedOptions, (opt) => Number(opt.value));
+                  const values = Array.from(e.target.selectedOptions, (opt) =>
+                    Number(opt.value)
+                  );
                   setDependencies(values);
                 }}
               >
@@ -177,7 +197,9 @@ export default function TasksPage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-gray-800 p-4 rounded-lg shadow mb-6 flex gap-4">
+        <h1 className="text-3xl font-bold">Filters</h1>
+
+        <div className="bg-gray-800 p-4 rounded-lg shadow mt-6 mb-6 flex gap-4">
           <select
             className="p-2 rounded bg-gray-700 border border-gray-600"
             value={priorityFilter}
@@ -239,7 +261,9 @@ export default function TasksPage() {
                         <td className="p-2">
                           <select
                             value={editPriority}
-                            onChange={(e) => setEditPriority(e.target.value as any)}
+                            onChange={(e) =>
+                              setEditPriority(e.target.value as any)
+                            }
                             className="bg-gray-700 p-1 rounded border border-gray-600"
                           >
                             <option value="low">Low</option>
@@ -250,7 +274,9 @@ export default function TasksPage() {
                         <td className="p-2">
                           <select
                             value={editStatus}
-                            onChange={(e) => setEditStatus(e.target.value as any)}
+                            onChange={(e) =>
+                              setEditStatus(e.target.value as any)
+                            }
                             className="bg-gray-700 p-1 rounded border border-gray-600"
                           >
                             <option value="to-do">To Do</option>
@@ -302,7 +328,10 @@ export default function TasksPage() {
                         <td className="p-2">
                           {task.dependencies?.length
                             ? task.dependencies
-                                .map((depId) => tasks.find((t) => t.id === depId)?.title)
+                                .map(
+                                  (depId) =>
+                                    tasks.find((t) => t.id === depId)?.title
+                                )
                                 .join(", ")
                             : "None"}
                         </td>
@@ -327,6 +356,15 @@ export default function TasksPage() {
               </tbody>
             </table>
           )}
+        </div>
+        <h1 className="text-3xl my-8 font-bold">All Users</h1>
+        <div className="bg-gray-800 p-6 rounded-lg shadow">
+          {users.map((user) => (
+            <div key={user.id} className="border-b border-gray-700 py-2">
+              <h2 className="text-xl font-semibold">{user.name}</h2>
+              <p className="text-gray-400">{user.email}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
